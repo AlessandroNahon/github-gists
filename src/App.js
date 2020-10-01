@@ -2,7 +2,6 @@ import React, { createContext, useReducer } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import User from 'views/User'
-import Login from 'views/Login'
 
 import { reducer, initialState } from 'store/reducer'
 

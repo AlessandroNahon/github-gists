@@ -23,14 +23,12 @@ const StyledAppBar = withStyles({
 
 const User = ({ mock = mockData }) => {
   const [name, setName] = useState('kentcdodds')
-  // const { isLoading, isFetching, error, data } = useQuery('gistData', () =>
-  //   fetchGistsByUser(name),
-  // )
-  // const { isLoading, isFetching, error, data } = useQuery('forkData', () =>
-  //   Promise.all(mock.map(g => fetchForksByUrl(g['forks_url']))),
-  // )
-
-  // console.log('forks', data)
+  const { isLoading, isFetching, error, data } = useQuery('gistData', () =>
+    fetchGistsByUser(name),
+  )
+  const { data: forks } = useQuery('forkData', () =>
+    Promise.all(data.map(g => fetchForksByUrl(g['forks_url']))),
+  )
 
   return (
     <FullView>
@@ -43,11 +41,11 @@ const User = ({ mock = mockData }) => {
         />
       </StyledAppBar>
       <Result
-      // forks={[]}
-      // data={[]}
-      // isLoading={isLoading}
-      // isFetching={isFetching}
-      // error={error}
+        forks={forks}
+        data={data}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        error={error}
       />
     </FullView>
   )

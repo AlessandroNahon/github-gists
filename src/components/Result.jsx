@@ -16,8 +16,6 @@ import {
 import { ExpandMore, CallSplit } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import { format } from 'date-fns'
-import mockData from '../data.json'
-import forkData from '../forks.json'
 
 const useStyles = makeStyles({
   root: {
@@ -68,12 +66,12 @@ const useStyles = makeStyles({
   },
 })
 
-function Result({ data = mockData, forks = forkData }) {
+function Result({ data, forks }) {
   const classes = useStyles()
 
-  if (!data && !forks) return <></>
+  if (!data || !forks) return <></>
 
-  const gists = data.map(g =>
+  const gists = data?.map(g =>
     Object.entries(g.files).map(f => {
       return {
         id: g.id,
