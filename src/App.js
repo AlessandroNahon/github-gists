@@ -1,29 +1,8 @@
-import React, { createContext, useReducer } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-
+import React from 'react'
 import User from 'views/User'
 
-import { reducer, initialState } from 'store/reducer'
-
-export const AuthContext = createContext()
-
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
-
-  return (
-    <AuthContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-    >
-      <Router>
-        <Switch>
-          <Route path="/" component={User} />
-        </Switch>
-      </Router>
-    </AuthContext.Provider>
-  )
+  return <User />
 }
 
 export default App
