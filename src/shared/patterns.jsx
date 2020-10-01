@@ -1,6 +1,6 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { Box } from '@material-ui/core'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { Box, Typography } from '@material-ui/core'
 
 const useFullViewStyles = makeStyles({
   root: {
@@ -26,5 +26,22 @@ export const FullView = ({ children, ...props }) => {
     >
       {children}
     </Box>
+  )
+}
+
+const StyledBox = withStyles({
+  root: {
+    height: '100vh',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+})(Box)
+
+export const StatusView = ({ children, value, ...props }) => {
+  return (
+    <StyledBox display="flex">
+      <Typography variant="body1">{value}</Typography>
+    </StyledBox>
   )
 }
