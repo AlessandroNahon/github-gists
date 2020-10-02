@@ -1,30 +1,14 @@
 import React from 'react'
-import { render, cleanup, fireEvent } from '@testing-library/react'
-import { format } from 'date-fns'
+import { render, cleanup } from '@testing-library/react'
 
 import data from 'data.json'
 import forks from 'forks.json'
 
+import { formatGistsWithForks } from 'utils/data'
+
 import Card from 'components/Card'
 
-const mockData = data?.map(g =>
-  Object.entries(g.files).map(f => {
-    return {
-      id: g.id,
-      html_url: g['html_url'],
-      description: g.description,
-      created_at: format(new Date(g['created_at']), 'LLL d yyyy'),
-      owner: g.owner,
-      ...f[1],
-    }
-  }),
-)
-
-const gistsWithForks = mockData.map((g, index) =>
-  g.map(f => {
-    return { ...f, forks: forks[index] }
-  }),
-)
+const gistsWithForks = formatGistsWithForks(data, forks)
 
 const setup = () => {
   const util = render(<Card data={gistsWithForks[0]} />)

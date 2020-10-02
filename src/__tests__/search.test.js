@@ -19,9 +19,12 @@ const setup = () => {
   }
 }
 afterEach(cleanup)
-it('renders successfuly', () => {
-  const { input } = setup()
-  expect(input).toBeTruthy()
+
+describe('search input', () => {
+  it('renders successfuly', () => {
+    const { input } = setup()
+    expect(input).toBeTruthy()
+  })
 })
 
 describe('input value', () => {

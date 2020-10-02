@@ -9,6 +9,7 @@ import Result from 'components/Result'
 import Logo from 'components/Logo'
 
 import { fetchGistsByUser, fetchForksByUrl } from 'api/user'
+import { formatGistsWithForks } from 'utils/data'
 
 const StyledAppBar = withStyles({
   root: {
@@ -30,15 +31,16 @@ const queryCache = new QueryCache({
 queryCache.invalidateQueries('forkData', { exact: true })
 
 const User = () => {
-  const [name, setName] = useState('')
+  const [value, setValue] = useState('')
   const {
     status,
     isLoading,
     isFetching,
     error,
+    isPreviousData,
     data: userGists,
     refetch,
-  } = useQuery('gistData', () => fetchGistsByUser(name), {
+  } = useQuery('gistData', () => fetchGistsByUser(value), {
     enabled: false,
   })
   const { data: forks, refetch: refetchForks } = useQuery(
@@ -52,9 +54,11 @@ const User = () => {
       ),
   )
 
+  const gistsWithForks = formatGistsWithForks(userGists, forks)
+
   const onSubmitHandler = e => {
     e.preventDefault()
-    if (name) {
+    if (value) {
       refetch()
       refetchForks()
     }
@@ -65,16 +69,23 @@ const User = () => {
       <FullView>
         <StyledAppBar position="fixed">
           <Logo />{' '}
-          <Search value={name} setValue={setName} onSubmit={onSubmitHandler} />
+          <Search
+            value={value}
+            setValue={setValue}
+            onSubmit={onSubmitHandler}
+          />
         </StyledAppBar>
         {error || status === 'error' ? (
           <StatusView value={error.message} />
         ) : !userGists ? (
           <StatusView value="Empty, nothing to see here." />
-        ) : status === 'loading' || isLoading || isFetching ? (
+        ) : status === 'loading' ||
+          isLoading ||
+          isFetching ||
+          isPreviousData ? (
           <StatusView value={<CircularProgress />} />
         ) : (
-          <Result forks={forks} data={userGists} />
+          <Result gists={gistsWithForks} data={userGists} />
         )}
       </FullView>
     </ReactQueryCacheProvider>
