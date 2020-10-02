@@ -38,17 +38,24 @@ function Result({ data, forks, error, isLoading, isFetching }) {
     }),
   )
 
-  return (
-    <Container>
-      <Typography gutterBottom variant="h2" className={classes.h1}>
-        {data[0].owner.login}
-      </Typography>
-      <Grid container className={classes.grid} justify="start" spacing={2}>
-        {gistsWithForks.map(f => (
-          <Card data={f} />
-        ))}
-      </Grid>
-    </Container>
+  return isLoading ? (
+    <span>Loading...</span>
+  ) : error ? (
+    <span>Error: {error.message}</span>
+  ) : (
+    <>
+      {isFetching ? <span>Refreshing...</span> : null}
+      <Container>
+        <Typography gutterBottom variant="h2" className={classes.h1}>
+          {data[0].owner.login}
+        </Typography>
+        <Grid container className={classes.grid} justify="start" spacing={2}>
+          {gistsWithForks.map(f => (
+            <Card data={f} />
+          ))}
+        </Grid>
+      </Container>
+    </>
   )
 }
 

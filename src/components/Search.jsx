@@ -8,6 +8,9 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(2),
     },
   },
+  button: {
+    display: 'none',
+  },
 }))
 
 const StyledLabel = withStyles({
@@ -32,6 +35,12 @@ const StyledInput = withStyles({
 const Search = ({ value, setValue, onSubmit }) => {
   const classes = useStyles()
 
+  const handleKeypress = e => {
+    if (e.keyCode === 13) {
+      onSubmit()
+    }
+  }
+
   const handleChange = event => {
     setValue(event.target.value)
   }
@@ -41,7 +50,8 @@ const Search = ({ value, setValue, onSubmit }) => {
       className={classes.root}
       noValidate
       autoComplete="off"
-      onSubmit={onSubmit}
+      data-testid="form"
+      aria-label="form"
     >
       <FormControl variant="outlined">
         <StyledLabel htmlFor="component-outlined" className={classes.label}>
@@ -51,8 +61,21 @@ const Search = ({ value, setValue, onSubmit }) => {
           id="component-outlined"
           value={value}
           onChange={handleChange}
-          label="Search"
+          onKeyPress={handleKeypress}
+          label="search"
+          inputProps={{
+            'data-testid': 'search',
+            'aria-label': 'search',
+          }}
         />
+        <button
+          onClick={onSubmit}
+          type="submit"
+          className={classes.button}
+          data-testid="button"
+        >
+          Submit
+        </button>
       </FormControl>
     </form>
   )

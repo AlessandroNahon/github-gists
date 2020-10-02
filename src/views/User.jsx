@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery, QueryCache, ReactQueryCacheProvider } from 'react-query'
 import { withStyles } from '@material-ui/core/styles'
 import { AppBar, CircularProgress } from '@material-ui/core'
 
@@ -19,6 +19,16 @@ const StyledAppBar = withStyles({
   },
 })(AppBar)
 
+const queryCache = new QueryCache({
+  defaultConfig: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
+queryCache.invalidateQueries('forkData', { exact: true })
+
 const User = () => {
   const [name, setName] = useState('')
   const {
@@ -27,38 +37,44 @@ const User = () => {
     isFetching,
     error,
     data: userGists,
-    refetch: refetchGists,
+    refetch,
   } = useQuery('gistData', () => fetchGistsByUser(name), {
-    manual: true,
+    enabled: false,
   })
-  const { data: forks, refetch: refetchForks } = useQuery(
-    'forkData',
-    () => Promise.all(userGists?.map(g => fetchForksByUrl(g['forks_url']))),
-    { manual: true, enabled: userGists },
+  const { data: forks, refetch: refetchForks } = useQuery('forkData', () =>
+    Promise.all(
+      userGists?.map(g => fetchForksByUrl(g['forks_url']), {
+        enabled: false,
+      }),
+    ),
   )
 
   const onSubmitHandler = e => {
     e.preventDefault()
-    refetchGists()
-    refetchForks()
+    if (name) {
+      refetch()
+      refetchForks()
+    }
   }
 
   return (
-    <FullView>
-      <StyledAppBar position="fixed">
-        <Logo />{' '}
-        <Search value={name} setValue={setName} onSubmit={onSubmitHandler} />
-      </StyledAppBar>
-      {error || status === 'error' ? (
-        <StatusView value={error.message} />
-      ) : !userGists ? (
-        <StatusView value="Empty, nothing to see here." />
-      ) : isLoading || isFetching ? (
-        <StatusView value={<CircularProgress />} />
-      ) : (
-        <Result forks={forks} data={userGists} />
-      )}
-    </FullView>
+    <ReactQueryCacheProvider queryCache={queryCache}>
+      <FullView>
+        <StyledAppBar position="fixed">
+          <Logo />{' '}
+          <Search value={name} setValue={setName} onSubmit={onSubmitHandler} />
+        </StyledAppBar>
+        {error || status === 'error' ? (
+          <StatusView value={error.message} />
+        ) : !userGists ? (
+          <StatusView value="Empty, nothing to see here." />
+        ) : isLoading || isFetching ? (
+          <StatusView value={<CircularProgress />} />
+        ) : (
+          <Result forks={forks} data={userGists} />
+        )}
+      </FullView>
+    </ReactQueryCacheProvider>
   )
 }
 
