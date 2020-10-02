@@ -41,12 +41,15 @@ const User = () => {
   } = useQuery('gistData', () => fetchGistsByUser(name), {
     enabled: false,
   })
-  const { data: forks, refetch: refetchForks } = useQuery('forkData', () =>
-    Promise.all(
-      userGists?.map(g => fetchForksByUrl(g['forks_url']), {
-        enabled: false,
-      }),
-    ),
+  const { data: forks, refetch: refetchForks } = useQuery(
+    'forkData',
+    () =>
+      userGists &&
+      Promise.all(
+        userGists?.map(g => fetchForksByUrl(g['forks_url']), {
+          enabled: false,
+        }),
+      ),
   )
 
   const onSubmitHandler = e => {
@@ -68,7 +71,7 @@ const User = () => {
           <StatusView value={error.message} />
         ) : !userGists ? (
           <StatusView value="Empty, nothing to see here." />
-        ) : isLoading || isFetching ? (
+        ) : status === 'loading' || isLoading || isFetching ? (
           <StatusView value={<CircularProgress />} />
         ) : (
           <Result forks={forks} data={userGists} />
