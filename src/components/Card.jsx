@@ -60,30 +60,29 @@ const useStyles = makeStyles({
 function CardComponent({ data }) {
   const classes = useStyles()
 
-  if (!data) return <></>
-
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} aria-label="card">
       <CardContent className={classes.content}>
         <Link
-          href={data[0]['html_url']}
+          aria-label="link"
+          href={data?.[0]['html_url']}
           target="_blank"
           className={classes.link}
         >
           <Typography gutterBottom variant="h6">
-            {data[0]['created_at']}
+            {data?.[0]['created_at']}
           </Typography>
 
           <Typography gutterBottom variant="subtitle1">
-            {data[0].description}
+            {data?.[0].description}
           </Typography>
           <Box className={classes.chips}>
-            {data.map(d => (
-              <Chip label={d.language} />
+            {data?.map(d => (
+              <Chip key={d['raw_url']} label={d.language} />
             ))}
           </Box>
         </Link>
-        {data[0].forks.length > 0 && (
+        {data?.[0].forks?.length > 0 && (
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMore />}
@@ -92,13 +91,13 @@ function CardComponent({ data }) {
             >
               <Typography className={classes.heading}>
                 <CallSplit className={classes.split} /> Forked by (
-                {data[0].forks.length})
+                {data?.[0].forks?.length})
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography gutterBottom variant="h6">
-                {data[0].forks.map(fork => (
-                  <div className={classes.forks}>
+                {data?.[0].forks?.map(fork => (
+                  <div key={fork.owner?.login} className={classes.forks}>
                     <Avatar
                       className={classes.avatar}
                       alt="Github user"
