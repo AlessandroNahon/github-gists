@@ -32,7 +32,7 @@ const StyledInput = withStyles({
   },
 })(OutlinedInput)
 
-const Search = ({ value, setValue, onSubmit }) => {
+function Search({ value, setValue, onSubmit }) {
   const classes = useStyles()
 
   const handleKeypress = e => {
