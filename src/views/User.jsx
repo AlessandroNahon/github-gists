@@ -1,26 +1,16 @@
 import React, { useState } from 'react'
 
-import { withStyles } from '@material-ui/core/styles'
-import { AppBar, CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 
 import { FullView, StatusView } from 'shared/patterns'
-import Search from 'components/Search'
+import NavBar from 'components/NavBar'
+
 import Result from 'components/Result'
-import Logo from 'components/Logo'
 
 import { useGists, useForksByGists } from 'hooks'
 import { formatGistsWithForks } from 'utils/data'
 
-const StyledAppBar = withStyles({
-  root: {
-    backgroundColor: '#24292e',
-    padding: '0 1rem',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})(AppBar)
-
-const User = () => {
+function User() {
   const [value, setValue] = useState('')
 
   const {
@@ -48,10 +38,11 @@ const User = () => {
 
   return (
     <FullView>
-      <StyledAppBar position="fixed">
-        <Logo />{' '}
-        <Search value={value} setValue={setValue} onSubmit={onSubmitHandler} />
-      </StyledAppBar>
+      <NavBar
+        value={value}
+        setValue={setValue}
+        onSubmitHandler={onSubmitHandler}
+      />
       {error || status === 'error' ? (
         <StatusView value={error.message} />
       ) : !userGists ? (
