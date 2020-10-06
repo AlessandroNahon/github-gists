@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 function Result({ gists, data, error, isLoading, isFetching }) {
   const classes = useStyles()
 
-  if (data && gists) {
+  if (data.length > 0 && gists) {
     return (
       <Container>
         <Box display="flex" className={classes.header}>

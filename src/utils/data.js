@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 
 export const formatGists = data => {
-  if (data && data[0].owner)
+  if (Array.isArray(data))
     return data?.map(g =>
       Object.entries(g.files).map(f => {
         return {
