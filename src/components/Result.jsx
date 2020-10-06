@@ -1,8 +1,16 @@
 import React from 'react'
-import { Typography, Grid, Container, Avatar, Box } from '@material-ui/core'
+import {
+  Typography,
+  Grid,
+  Container,
+  Avatar,
+  Box,
+  CircularProgress,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Card from 'components/Card'
+import { StatusView } from 'shared/patterns'
 
 const useStyles = makeStyles({
   h1: {
@@ -26,15 +34,8 @@ const useStyles = makeStyles({
 function Result({ gists, data, error, isLoading, isFetching }) {
   const classes = useStyles()
 
-  if (!gists) return <></>
-
-  return isLoading ? (
-    <span>Loading...</span>
-  ) : error ? (
-    <span>Error: {error.message}</span>
-  ) : (
-    <>
-      {isFetching ? <span>Refreshing...</span> : null}
+  if (data && gists) {
+    return (
       <Container>
         <Box display="flex" className={classes.header}>
           <Avatar
@@ -52,8 +53,10 @@ function Result({ gists, data, error, isLoading, isFetching }) {
           ))}
         </Grid>
       </Container>
-    </>
-  )
+    )
+  }
+
+  return <StatusView value={<CircularProgress />} />
 }
 
 export default Result

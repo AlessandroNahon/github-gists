@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 
 export const formatGists = data => {
-  if (data)
+  if (data && data[0].owner)
     return data?.map(g =>
       Object.entries(g.files).map(f => {
         return {
@@ -14,6 +14,8 @@ export const formatGists = data => {
         }
       }),
     )
+
+  if (data.message === 'Not Found') return null
 }
 
 export const formatGistsWithForks = (gists, forks) => {
