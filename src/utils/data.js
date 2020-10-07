@@ -14,13 +14,13 @@ export const formatGists = data => {
         }
       }),
     )
-
-  if (data.message === 'Not Found') return null
 }
 
 export const formatGistsWithForks = (gists, forks) => {
-  if (gists && forks)
-    return formatGists(gists).map((g, index) =>
+  const formattedGists = formatGists(gists)
+
+  if (formattedGists && forks)
+    return formattedGists?.map((g, index) =>
       g.map(f => {
         return { ...f, forks: forks[index] }
       }),

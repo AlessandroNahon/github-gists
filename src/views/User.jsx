@@ -7,8 +7,7 @@ import Logo from 'components/Logo'
 import Search from 'components/Search'
 import Result from 'components/Result'
 
-import { useGists, useForksByGists } from 'hooks'
-import { formatGistsWithForks } from 'utils/data'
+import { useGists, useGistsWithForks } from 'hooks'
 
 const StyledAppBar = withStyles({
   root: {
@@ -27,14 +26,13 @@ function User() {
     isLoading,
     isFetching,
     error,
-    isPreviousData,
     data: userGists,
     refetch,
   } = useGists(value)
 
-  const { data: forks, refetch: refetchForks } = useForksByGists(userGists)
-
-  const gistsWithForks = formatGistsWithForks(userGists, forks)
+  const { data: gistsWithForks, refetch: refetchForks } = useGistsWithForks(
+    userGists,
+  )
 
   const onSubmitHandler = e => {
     e.preventDefault()
@@ -55,7 +53,7 @@ function User() {
         <StatusView value={error.message} />
       ) : !userGists ? (
         <StatusView value="Empty, nothing to see here." />
-      ) : status === 'loading' || isLoading || isFetching || isPreviousData ? (
+      ) : status === 'loading' || isLoading || isFetching ? (
         <StatusView value={<CircularProgress />} />
       ) : (
         <Result gists={gistsWithForks} data={userGists} />

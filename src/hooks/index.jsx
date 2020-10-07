@@ -1,16 +1,17 @@
 import { useQuery } from 'react-query'
 
 import { fetchGistsByUser, fetchForksByUrl } from 'api/user'
+import { formatGistsWithForks } from 'utils/data'
 
 export const useGists = value => {
   const data = useQuery('gistData', () => fetchGistsByUser(value), {
-    enabled: value,
+    enabled: false,
   })
 
   return data
 }
 
-export const useForksByGists = userGists => {
+export const useGistsWithForks = userGists => {
   const data = useQuery(
     'forkData',
     () =>
@@ -22,5 +23,5 @@ export const useForksByGists = userGists => {
       ),
   )
 
-  return data
+  return { data: formatGistsWithForks(userGists, data), refetch: data.refetch }
 }
